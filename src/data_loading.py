@@ -5,7 +5,10 @@ from pathlib import Path
 import pandas as pd
 import requests
 
-from utils import ensure_directory
+try:
+    from .utils import ensure_directory
+except ImportError:
+    from utils import ensure_directory
 
 
 RAW_DATA_DIR = Path("data/raw")

@@ -2,8 +2,12 @@ from __future__ import annotations
 
 import pandas as pd
 
-from preprocessing import age_to_days, clean_text_category, normalize_animal_type
-from utils import season_from_month
+try:
+    from .preprocessing import age_to_days, clean_text_category, normalize_animal_type
+    from .utils import season_from_month
+except ImportError:
+    from preprocessing import age_to_days, clean_text_category, normalize_animal_type
+    from utils import season_from_month
 
 
 TARGET_COLUMNS = {

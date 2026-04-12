@@ -3,9 +3,14 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from dataset_builder import build_dataset
-from modeling import create_data_splits, train_and_evaluate_model
-from utils import ensure_directory, set_global_seed
+try:
+    from .dataset_builder import build_dataset
+    from .modeling import create_data_splits, train_and_evaluate_model
+    from .utils import ensure_directory, set_global_seed
+except ImportError:
+    from dataset_builder import build_dataset
+    from modeling import create_data_splits, train_and_evaluate_model
+    from utils import ensure_directory, set_global_seed
 
 
 def main() -> None:

@@ -7,10 +7,16 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from data_loading import PROCESSED_DATA_DIR, RAW_DATA_DIR, ensure_raw_data, load_csv
-from feature_engineering import build_modeling_dataframe
-from preprocessing import normalize_animal_type
-from utils import ensure_directory, normalize_columns, save_json
+try:
+    from .data_loading import PROCESSED_DATA_DIR, RAW_DATA_DIR, ensure_raw_data, load_csv
+    from .feature_engineering import build_modeling_dataframe
+    from .preprocessing import normalize_animal_type
+    from .utils import ensure_directory, normalize_columns, save_json
+except ImportError:
+    from data_loading import PROCESSED_DATA_DIR, RAW_DATA_DIR, ensure_raw_data, load_csv
+    from feature_engineering import build_modeling_dataframe
+    from preprocessing import normalize_animal_type
+    from utils import ensure_directory, normalize_columns, save_json
 
 
 INTAKE_COLUMN_CANDIDATES = {

@@ -23,9 +23,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-from feature_engineering import MODEL_FEATURE_COLUMNS
-from preprocessing import RareCategoryGrouper
-from utils import ensure_directory, save_json
+try:
+    from .feature_engineering import MODEL_FEATURE_COLUMNS
+    from .preprocessing import RareCategoryGrouper
+    from .utils import ensure_directory, save_json
+except ImportError:
+    from feature_engineering import MODEL_FEATURE_COLUMNS
+    from preprocessing import RareCategoryGrouper
+    from utils import ensure_directory, save_json
 
 
 def make_one_hot_encoder() -> OneHotEncoder:

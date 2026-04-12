@@ -3,8 +3,12 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from dataset_builder import build_dataset
-from utils import load_json
+try:
+    from .dataset_builder import build_dataset
+    from .utils import load_json
+except ImportError:
+    from dataset_builder import build_dataset
+    from utils import load_json
 
 
 def format_section(title: str, lines: list[str]) -> str:
