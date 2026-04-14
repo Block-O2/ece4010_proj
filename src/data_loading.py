@@ -22,8 +22,10 @@ DATA_SOURCES = {
             "austin_animal_center_intakes.csv",
             "intakes.csv",
             "Austin_Animal_Center_Intakes.csv",
+            "Austin_Animal_Center_Intakes__10_01_2013_to_05_05_2025_.csv",
             "aac_intakes.csv",
         ],
+        "filename_keywords": ["intake", "animal_center"],
     },
     "outcomes": {
         "url": "https://data.austintexas.gov/api/views/9t4d-g238/rows.csv?accessType=DOWNLOAD",
@@ -32,16 +34,28 @@ DATA_SOURCES = {
             "austin_animal_center_outcomes.csv",
             "outcomes.csv",
             "Austin_Animal_Center_Outcomes.csv",
+            "Austin_Animal_Center_Outcomes__10_01_2013_to_05_05_2025_.csv",
             "aac_outcomes.csv",
         ],
+        "filename_keywords": ["outcome", "animal_center"],
     },
 }
 
 
-def _find_existing_file(raw_dir: Path, candidates: list[str]) -> Path | None:
+def _find_existing_file(
+    raw_dir: Path,
+    candidates: list[str],
+    filename_keywords: list[str] | None = None,
+) -> Path | None:
     for filename in candidates:
         candidate = raw_dir / filename
         if candidate.exists() and is_valid_csv_file(candidate):
+            return candidate
+
+    keywords = [keyword.lower() for keyword in (filename_keywords or [])]
+    for candidate in sorted(raw_dir.glob("*.csv")):
+        lowered = candidate.name.lower()
+        if keywords and all(keyword in lowered for keyword in keywords) and is_valid_csv_file(candidate):
             return candidate
     return None
 
@@ -90,7 +104,11 @@ def ensure_raw_data(
     missing_messages: list[str] = []
 
     for dataset_key, config in DATA_SOURCES.items():
-        existing = None if overwrite else _find_existing_file(raw_path, config["accepted_filenames"])
+        existing = None if overwrite else _find_existing_file(
+            raw_path,
+            config["accepted_filenames"],
+            config.get("filename_keywords"),
+        )
         if existing is not None:
             resolved[dataset_key] = existing
             continue

@@ -44,6 +44,8 @@ Accepted fallback filenames are also handled:
 - `outcomes.csv`
 - `Austin_Animal_Center_Intakes.csv`
 - `Austin_Animal_Center_Outcomes.csv`
+- `Austin_Animal_Center_Intakes__10_01_2013_to_05_05_2025_.csv`
+- `Austin_Animal_Center_Outcomes__10_01_2013_to_05_05_2025_.csv`
 
 No Kaggle token is required.
 
@@ -148,6 +150,12 @@ To switch to the fallback label:
 python src/evaluate.py --target adoption
 ```
 
+Low-resource run on a smaller sampled subset:
+
+```bash
+python src/evaluate.py --no-download --max-rows 50000
+```
+
 ## Outputs
 
 Processed data:
@@ -155,6 +163,7 @@ Processed data:
 - [data/processed/paired_dataset.csv](/Users/hankli/Desktop/coding/ece4010_proj/data/processed/paired_dataset.csv)
 - [data/processed/modeling_dataset.csv](/Users/hankli/Desktop/coding/ece4010_proj/data/processed/modeling_dataset.csv)
 - [data/processed/dataset_report.json](/Users/hankli/Desktop/coding/ece4010_proj/data/processed/dataset_report.json)
+- `data/processed/data_audit.md`
 
 Training and evaluation artifacts:
 
@@ -182,6 +191,23 @@ This avoids an unstable many-to-many merge on repeated IDs and keeps the logic e
 - Repeated `Animal ID` records are handled with a simple chronological pairing heuristic, not a complex event-reconstruction algorithm.
 - High-cardinality categories such as breed and color are grouped so the baseline remains lightweight and presentation-friendly.
 - This repository is a baseline ML project, not a production shelter decision system.
+- Full-data sklearn training can still be heavy on laptops with limited memory; use `--max-rows` first when moving to a smaller machine.
+
+## Work Completed
+
+- Built the reusable project structure, Python modules, notebook scaffold, and proposal/slides outlines.
+- Implemented raw-data loading with download fallback and manual CSV support.
+- Implemented column normalization, mixed-format datetime parsing, intake/outcome pairing, and both labels.
+- Verified that the main `fast_adoption_30d` task can be constructed on the Austin Animal Center data.
+- Added a data audit script and generated processed datasets locally.
+- Added lower-resource execution options by reusing `data/processed/modeling_dataset.csv` and supporting `--max-rows`.
+
+## Next Steps
+
+- Run `python src/evaluate.py --no-download --max-rows 50000` on a cooler / larger machine first.
+- If that succeeds, increase `--max-rows` gradually or remove it to approach the full dataset.
+- Review the saved metrics, confusion matrices, and random-forest feature importance.
+- Update `outputs/results_summary.md` with the real baseline results after the models finish.
 
 ## Fallback Note
 

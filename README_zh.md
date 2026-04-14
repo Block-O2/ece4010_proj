@@ -56,6 +56,8 @@
 - `outcomes.csv`
 - `Austin_Animal_Center_Intakes.csv`
 - `Austin_Animal_Center_Outcomes.csv`
+- `Austin_Animal_Center_Intakes__10_01_2013_to_05_05_2025_.csv`
+- `Austin_Animal_Center_Outcomes__10_01_2013_to_05_05_2025_.csv`
 
 不依赖 Kaggle token。
 
@@ -193,6 +195,12 @@ python src/evaluate.py --target adoption
 python src/evaluate.py --split-method time
 ```
 
+### 7. 在配置较弱的电脑上先跑轻量版本
+
+```bash
+python src/evaluate.py --no-download --max-rows 50000
+```
+
 ## 输出内容
 
 处理后的数据：
@@ -200,6 +208,7 @@ python src/evaluate.py --split-method time
 - [data/processed/paired_dataset.csv](/Users/hankli/Desktop/coding/ece4010_proj/data/processed/paired_dataset.csv)
 - [data/processed/modeling_dataset.csv](/Users/hankli/Desktop/coding/ece4010_proj/data/processed/modeling_dataset.csv)
 - [data/processed/dataset_report.json](/Users/hankli/Desktop/coding/ece4010_proj/data/processed/dataset_report.json)
+- `data/processed/data_audit.md`
 
 训练和评估输出：
 
@@ -223,12 +232,36 @@ python src/evaluate.py --split-method time
 - Logistic Regression / Random Forest 训练与评估脚本
 - EDA notebook 骨架
 - README 与 proposal/slides 文档骨架
+- Austin 原始数据的真实读入验证
+- mixed-format 时间字段解析修复
+- 数据审计脚本与 `data_audit.md`
+- 低资源运行选项 `--max-rows`
 
 ## 当前限制
 
 - Austin 官方开放数据接口有时会阻止脚本下载，出现 `403 Forbidden`，因此代码默认支持手动放置 CSV
 - 重复 `Animal ID` 的配对使用的是简单启发式规则，不是复杂事件重构算法
 - 当前 baseline 主要服务于课程项目，强调可复现和可讲清楚，而不是追求复杂建模
+- 对全量数据直接跑 sklearn baseline 时，部分笔记本可能会因为内存或散热压力导致 Python 进程被系统杀掉；建议先用 `--max-rows` 跑轻量版本
+
+## 已完成工作
+
+- 完成项目目录结构、核心 Python 模块、EDA notebook 骨架和 proposal/slides 文档骨架。
+- 完成官方 URL 下载 + 本地手动 CSV 回退读取。
+- 完成列名标准化、年龄处理、低频类别合并和 intake 时间特征提取。
+- 完成 intake/outcome 的 chronological pairing 逻辑，并保留主任务与 fallback 标签。
+- 在真实 Austin Animal Center 数据上验证了主任务标签可以稳定构造。
+- 修复了 outcomes 表混合时间格式导致的大量时间解析失败问题。
+- 增加了 `check_data.py` 与 `data_audit.md`，可直接查看列名、重复 ID、配对情况和标签分布。
+- 增加了复用 `data/processed/modeling_dataset.csv` 和 `--max-rows` 的低资源运行路径。
+
+## 下一步工作
+
+- 在另一台机器上优先运行：
+  - `python src/evaluate.py --no-download --max-rows 50000`
+- 如果能稳定跑完，再逐步增大 `--max-rows`，最后尝试全量数据。
+- 检查 `outputs/metrics/`、`outputs/figures/` 和 `outputs/results_summary.md` 是否都生成完整。
+- 根据真实 baseline 结果补齐结果总结，并决定是否需要保留 fallback 任务作为备选展示。
 
 ## Fallback 说明
 

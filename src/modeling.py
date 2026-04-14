@@ -21,7 +21,7 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder, StandardScaler
 
 try:
     from .feature_engineering import MODEL_FEATURE_COLUMNS
@@ -79,22 +79,41 @@ def create_data_splits(
     return {"train": train_df.copy(), "val": val_df.copy(), "test": test_df.copy()}
 
 
-def build_preprocessor(feature_columns: list[str]) -> ColumnTransformer:
+def build_preprocessor(feature_columns: list[str], model_name: str) -> ColumnTransformer:
     numeric_columns = ["age_upon_intake_days"]
     categorical_columns = [column for column in feature_columns if column not in numeric_columns]
 
-    categorical_pipeline = Pipeline(
-        steps=[
-            ("rare", RareCategoryGrouper(min_frequency=0.01, max_categories=25)),
-            ("onehot", make_one_hot_encoder()),
-        ]
-    )
-    numeric_pipeline = Pipeline(
-        steps=[
-            ("imputer", SimpleImputer(strategy="median")),
-            ("scaler", StandardScaler(with_mean=False)),
-        ]
-    )
+    if model_name == "rf":
+        categorical_pipeline = Pipeline(
+            steps=[
+                ("rare", RareCategoryGrouper(min_frequency=0.01, max_categories=25)),
+                (
+                    "ordinal",
+                    OrdinalEncoder(
+                        handle_unknown="use_encoded_value",
+                        unknown_value=-1,
+                    ),
+                ),
+            ]
+        )
+        numeric_pipeline = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="median")),
+            ]
+        )
+    else:
+        categorical_pipeline = Pipeline(
+            steps=[
+                ("rare", RareCategoryGrouper(min_frequency=0.01, max_categories=25)),
+                ("onehot", make_one_hot_encoder()),
+            ]
+        )
+        numeric_pipeline = Pipeline(
+            steps=[
+                ("imputer", SimpleImputer(strategy="median")),
+                ("scaler", StandardScaler(with_mean=False)),
+            ]
+        )
 
     return ColumnTransformer(
         transformers=[
@@ -108,14 +127,16 @@ def get_model(model_name: str, seed: int = 42) -> Any:
     if model_name == "logreg":
         return LogisticRegression(
             max_iter=1000,
-            solver="liblinear",
+            solver="saga",
             class_weight="balanced",
             random_state=seed,
+            n_jobs=-1,
         )
     if model_name == "rf":
         return RandomForestClassifier(
-            n_estimators=300,
-            min_samples_leaf=2,
+            n_estimators=150,
+            min_samples_leaf=5,
+            max_features="sqrt",
             class_weight="balanced_subsample",
             n_jobs=-1,
             random_state=seed,
@@ -145,7 +166,7 @@ def get_model(model_name: str, seed: int = 42) -> Any:
 def build_training_pipeline(model_name: str, seed: int = 42) -> Pipeline:
     return Pipeline(
         steps=[
-            ("preprocessor", build_preprocessor(MODEL_FEATURE_COLUMNS)),
+            ("preprocessor", build_preprocessor(MODEL_FEATURE_COLUMNS, model_name=model_name)),
             ("classifier", get_model(model_name, seed=seed)),
         ]
     )

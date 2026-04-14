@@ -8,6 +8,7 @@ outputs/figures/*.png
 outputs/metrics/*.json
 outputs/metrics/*.csv
 outputs/models/*.joblib
+data/raw/*.csv
 data/processed/*.csv
 data/processed/*.json
 data/processed/*.md

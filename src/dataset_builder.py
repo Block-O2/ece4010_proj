@@ -53,6 +53,14 @@ REQUIRED_INTAKE_COLUMNS = ["animal_id", "intake_datetime", "animal_type"]
 REQUIRED_OUTCOME_COLUMNS = ["animal_id", "outcome_datetime", "outcome_type"]
 
 
+def parse_datetime_series(series: pd.Series) -> pd.Series:
+    try:
+        parsed = pd.to_datetime(series, errors="coerce", utc=True, format="mixed")
+    except TypeError:
+        parsed = pd.to_datetime(series, errors="coerce", utc=True)
+    return parsed.dt.tz_convert(None)
+
+
 def _rename_columns(
     df: pd.DataFrame,
     candidate_map: dict[str, list[str]],
@@ -87,7 +95,7 @@ def _rename_columns(
 
 def standardize_intakes(df: pd.DataFrame) -> pd.DataFrame:
     standardized = _rename_columns(df, INTAKE_COLUMN_CANDIDATES, REQUIRED_INTAKE_COLUMNS)
-    standardized["intake_datetime"] = pd.to_datetime(standardized["intake_datetime"], errors="coerce")
+    standardized["intake_datetime"] = parse_datetime_series(standardized["intake_datetime"])
     standardized["animal_type"] = standardized["animal_type"].map(normalize_animal_type)
     standardized = standardized.dropna(subset=["animal_id", "intake_datetime"])
     return standardized
@@ -95,7 +103,7 @@ def standardize_intakes(df: pd.DataFrame) -> pd.DataFrame:
 
 def standardize_outcomes(df: pd.DataFrame) -> pd.DataFrame:
     standardized = _rename_columns(df, OUTCOME_COLUMN_CANDIDATES, REQUIRED_OUTCOME_COLUMNS)
-    standardized["outcome_datetime"] = pd.to_datetime(standardized["outcome_datetime"], errors="coerce")
+    standardized["outcome_datetime"] = parse_datetime_series(standardized["outcome_datetime"])
     standardized["animal_type_outcome"] = standardized["animal_type_outcome"].map(normalize_animal_type)
     standardized = standardized.dropna(subset=["animal_id", "outcome_datetime"])
     return standardized
