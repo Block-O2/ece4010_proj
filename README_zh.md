@@ -201,6 +201,28 @@ python src/evaluate.py --split-method time
 python src/evaluate.py --no-download --max-rows 50000
 ```
 
+### 8. 如果换到 Windows 游戏本继续
+
+推荐先用 CPU 跑这套 baseline，因为当前实现主要基于 pandas 和 scikit-learn，瓶颈更偏向内存和 CPU，而不是 GPU。RTX 4060 对当前版本不是关键加速点，但更强的散热和更大的内存通常会更稳。
+
+Windows 下建议命令：
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python src\check_data.py --no-download
+python src\evaluate.py --no-download --max-rows 50000
+```
+
+如果 50000 行稳定，再逐步提高到：
+
+```powershell
+python src\evaluate.py --no-download --max-rows 80000
+python src\evaluate.py --no-download --max-rows 120000
+python src\evaluate.py --no-download
+```
+
 ## 输出内容
 
 处理后的数据：
@@ -257,9 +279,12 @@ python src/evaluate.py --no-download --max-rows 50000
 
 ## 下一步工作
 
-- 在另一台机器上优先运行：
-  - `python src/evaluate.py --no-download --max-rows 50000`
-- 如果能稳定跑完，再逐步增大 `--max-rows`，最后尝试全量数据。
+- 这台 Mac 先暂停，不再继续跑训练，避免继续升温和触发系统杀进程。
+- 在 Windows 游戏本上优先运行：
+  - `python src\check_data.py --no-download`
+  - `python src\evaluate.py --no-download --max-rows 50000`
+- 这套 baseline 当前主要依赖 CPU 和内存，不依赖 4060 显卡；优先确保电源模式为高性能、散热正常、不要让系统自动省电降频。
+- 如果 50000 行稳定跑完，再逐步增大 `--max-rows`，最后尝试全量数据。
 - 检查 `outputs/metrics/`、`outputs/figures/` 和 `outputs/results_summary.md` 是否都生成完整。
 - 根据真实 baseline 结果补齐结果总结，并决定是否需要保留 fallback 任务作为备选展示。
 

@@ -156,6 +156,20 @@ Low-resource run on a smaller sampled subset:
 python src/evaluate.py --no-download --max-rows 50000
 ```
 
+Continue on a Windows gaming laptop:
+
+The current baseline is built on pandas and scikit-learn, so it is still mostly CPU / memory bound rather than GPU bound. An RTX 4060 is not the main accelerator for this version, but a better cooling system and a larger RAM budget should make the runs more stable.
+
+Recommended Windows commands:
+
+```powershell
+py -3 -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements.txt
+python src\check_data.py --no-download
+python src\evaluate.py --no-download --max-rows 50000
+```
+
 ## Outputs
 
 Processed data:
@@ -204,7 +218,9 @@ This avoids an unstable many-to-many merge on repeated IDs and keeps the logic e
 
 ## Next Steps
 
-- Run `python src/evaluate.py --no-download --max-rows 50000` on a cooler / larger machine first.
+- Pause work on this Mac and move the model runs to the Windows gaming laptop.
+- Run `python src\check_data.py --no-download` first, then `python src\evaluate.py --no-download --max-rows 50000`.
+- This baseline is currently CPU / memory heavy rather than GPU heavy, so prioritize high-performance power mode and stable cooling over GPU tuning.
 - If that succeeds, increase `--max-rows` gradually or remove it to approach the full dataset.
 - Review the saved metrics, confusion matrices, and random-forest feature importance.
 - Update `outputs/results_summary.md` with the real baseline results after the models finish.
