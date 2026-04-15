@@ -8,6 +8,8 @@ outputs/figures/*.png
 outputs/metrics/*.json
 outputs/metrics/*.csv
 outputs/models/*.joblib
+outputs_adoption/
+outputs_time/
 data/raw/*.csv
 data/processed/*.csv
 data/processed/*.json

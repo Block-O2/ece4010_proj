@@ -212,6 +212,26 @@ Most important random-forest features in the latest run:
 - `sex_upon_intake`
 - `intake_type`
 
+## Additional Comparison Experiments
+
+Two extra experiments were run after the main baseline so the repository now includes stronger report-ready comparisons:
+
+1. Fallback target `adoption` with the default stratified split
+2. Main target `fast_adoption_30d` with a time-based split
+
+Latest verified comparison results:
+
+- `adoption` + `logreg`: Accuracy `0.6648`, F1-score `0.6892`, ROC-AUC `0.7270`
+- `adoption` + `rf`: Accuracy `0.7156`, F1-score `0.7268`, ROC-AUC `0.7961`
+- `fast_adoption_30d` + time split + `logreg`: Accuracy `0.6165`, F1-score `0.5498`, ROC-AUC `0.6724`
+- `fast_adoption_30d` + time split + `rf`: Accuracy `0.6983`, F1-score `0.5773`, ROC-AUC `0.7654`
+
+Interpretation:
+
+- The fallback `adoption` label is easier than `fast_adoption_30d`, which is expected because it is a less restrictive task.
+- Random Forest remains the best model across all tested settings.
+- Time-based splitting reduces performance compared with the default stratified split, which makes the time-based experiment a useful robustness check.
+
 ## Outputs
 
 Processed data:
@@ -230,6 +250,7 @@ Training and evaluation artifacts:
 - `outputs/figures/*_confusion_matrix.png`
 - `outputs/figures/rf_feature_importance.png`
 - [outputs/results_summary.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/results_summary.md)
+- [outputs/extended_experiments.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/extended_experiments.md)
 
 ## Matching Rule
 
@@ -263,10 +284,10 @@ This avoids an unstable many-to-many merge on repeated IDs and keeps the logic e
 
 ## Next Steps
 
-- Review the generated confusion matrices and random-forest feature-importance plot for presentation use.
-- Decide whether to keep `fast_adoption_30d` as the main report target or present `adoption` as a fallback robustness check.
-- Expand the EDA notebook and presentation materials using the now-verified dataset and saved outputs.
-- If desired, add time-based split experiments with `python -m src.evaluate --no-download --split-method time`.
+- Turn the verified results and plots into final course slides or report sections.
+- Decide whether to present `adoption` as a backup task or as a comparison experiment only.
+- Expand the EDA notebook with a few presentation-ready charts if the course requires more descriptive analysis.
+- If more modeling depth is needed later, add XGBoost or hyperparameter tuning on top of the verified baseline.
 
 ## Fallback Note
 
