@@ -53,30 +53,30 @@ No Kaggle token is required.
 
 ```text
 ece4010_proj/
-├── data/
-│   ├── raw/
-│   └── processed/
-├── notebooks/
-│   └── eda.ipynb
-├── outputs/
-│   ├── figures/
-│   ├── metrics/
-│   ├── models/
-│   └── results_summary.md
-├── src/
-│   ├── data_loading.py
-│   ├── dataset_builder.py
-│   ├── evaluate.py
-│   ├── feature_engineering.py
-│   ├── modeling.py
-│   ├── preprocessing.py
-│   ├── train.py
-│   └── utils.py
-├── matching_strategy.md
-├── proposal_outline.md
-├── slides_outline.md
-├── README.md
-└── requirements.txt
+|-- data/
+|   |-- raw/
+|   `-- processed/
+|-- notebooks/
+|   `-- eda.ipynb
+|-- outputs/
+|   |-- figures/
+|   |-- metrics/
+|   |-- models/
+|   `-- results_summary.md
+|-- src/
+|   |-- data_loading.py
+|   |-- dataset_builder.py
+|   |-- evaluate.py
+|   |-- feature_engineering.py
+|   |-- modeling.py
+|   |-- preprocessing.py
+|   |-- train.py
+|   `-- utils.py
+|-- matching_strategy.md
+|-- proposal_outline.md
+|-- slides_outline.md
+|-- README.md
+`-- requirements.txt
 ```
 
 ## Features
@@ -163,12 +163,54 @@ The current baseline is built on pandas and scikit-learn, so it is still mostly 
 Recommended Windows commands:
 
 ```powershell
-py -3 -m venv .venv
+python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-python src\check_data.py --no-download
-python src\evaluate.py --no-download --max-rows 50000
+python -m src.check_data --no-download
+python -m src.evaluate --no-download --max-rows 50000
 ```
+
+## Latest Verified Run
+
+This repository was verified on a Windows machine on 2026-04-15.
+
+What was completed in that run:
+
+- Cloned the repository locally on Windows
+- Created a local `.venv` and installed the required dependencies
+- Downloaded the official Austin Animal Center intake and outcome CSV files
+- Built `data/processed/paired_dataset.csv` and `data/processed/modeling_dataset.csv`
+- Generated `data/processed/dataset_report.json` and `data/processed/data_audit.md`
+- Ran the full evaluation suite on the complete processed dataset
+- Saved updated metrics, confusion matrices, feature-importance outputs, and model artifacts
+
+Compatibility note:
+
+- `RareCategoryGrouper` now implements `get_feature_names_out`, which fixes feature-importance export with newer scikit-learn releases.
+- The unused `n_jobs` argument was removed from logistic regression to avoid a scikit-learn warning on newer versions.
+
+## Latest Baseline Results
+
+Full-data run with the default target `fast_adoption_30d`:
+
+- Dataset rows after pairing and feature construction: `163932`
+- Positive rate for `fast_adoption_30d`: `0.3294`
+- Positive rate for fallback `adoption`: `0.5036`
+- Outcome match rate after chronological pairing: `0.99`
+- Temporal mismatch rate after pairing: `0.0043`
+
+Test-set metrics from the latest full evaluation:
+
+- `logreg`: Accuracy `0.6463`, F1-score `0.5828`, ROC-AUC `0.7313`
+- `rf`: Accuracy `0.7289`, F1-score `0.6406`, ROC-AUC `0.8149`
+
+Most important random-forest features in the latest run:
+
+- `age_upon_intake_days`
+- `intake_year`
+- `color`
+- `sex_upon_intake`
+- `intake_type`
 
 ## Outputs
 
@@ -205,7 +247,7 @@ This avoids an unstable many-to-many merge on repeated IDs and keeps the logic e
 - Repeated `Animal ID` records are handled with a simple chronological pairing heuristic, not a complex event-reconstruction algorithm.
 - High-cardinality categories such as breed and color are grouped so the baseline remains lightweight and presentation-friendly.
 - This repository is a baseline ML project, not a production shelter decision system.
-- Full-data sklearn training can still be heavy on laptops with limited memory; use `--max-rows` first when moving to a smaller machine.
+- Full-data sklearn training can still be heavy on laptops with limited memory on some machines, even though the verified Windows run completed successfully.
 
 ## Work Completed
 
@@ -215,15 +257,16 @@ This avoids an unstable many-to-many merge on repeated IDs and keeps the logic e
 - Verified that the main `fast_adoption_30d` task can be constructed on the Austin Animal Center data.
 - Added a data audit script and generated processed datasets locally.
 - Added lower-resource execution options by reusing `data/processed/modeling_dataset.csv` and supporting `--max-rows`.
+- Verified the full Windows workflow from environment setup to full-data evaluation.
+- Generated a complete set of baseline outputs and updated the repository summary with real metrics.
+- Fixed scikit-learn compatibility for feature-importance export on newer environments.
 
 ## Next Steps
 
-- Pause work on this Mac and move the model runs to the Windows gaming laptop.
-- Run `python src\check_data.py --no-download` first, then `python src\evaluate.py --no-download --max-rows 50000`.
-- This baseline is currently CPU / memory heavy rather than GPU heavy, so prioritize high-performance power mode and stable cooling over GPU tuning.
-- If that succeeds, increase `--max-rows` gradually or remove it to approach the full dataset.
-- Review the saved metrics, confusion matrices, and random-forest feature importance.
-- Update `outputs/results_summary.md` with the real baseline results after the models finish.
+- Review the generated confusion matrices and random-forest feature-importance plot for presentation use.
+- Decide whether to keep `fast_adoption_30d` as the main report target or present `adoption` as a fallback robustness check.
+- Expand the EDA notebook and presentation materials using the now-verified dataset and saved outputs.
+- If desired, add time-based split experiments with `python -m src.evaluate --no-download --split-method time`.
 
 ## Fallback Note
 

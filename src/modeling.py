@@ -130,7 +130,6 @@ def get_model(model_name: str, seed: int = 42) -> Any:
             solver="saga",
             class_weight="balanced",
             random_state=seed,
-            n_jobs=-1,
         )
     if model_name == "rf":
         return RandomForestClassifier(

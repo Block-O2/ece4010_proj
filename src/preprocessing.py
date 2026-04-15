@@ -98,6 +98,11 @@ class RareCategoryGrouper(BaseEstimator, TransformerMixin):
             frame[column] = cleaned.where(cleaned.isin(allowed), self.other_label)
         return frame
 
+    def get_feature_names_out(self, input_features: Any = None) -> np.ndarray:
+        if input_features is None:
+            input_features = getattr(self, "columns_", [])
+        return np.asarray(input_features, dtype=object)
+
     @staticmethod
     def _to_dataframe(X: Any) -> pd.DataFrame:
         if isinstance(X, pd.DataFrame):
