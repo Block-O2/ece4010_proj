@@ -252,6 +252,21 @@ Training and evaluation artifacts:
 - [outputs/results_summary.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/results_summary.md)
 - [outputs/extended_experiments.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/extended_experiments.md)
 
+## Final Project Materials
+
+The repository now includes a report-ready materials package on top of the verified baseline:
+
+- [materials_status.md](/Users/hankli/Desktop/coding/ece4010_proj/materials_status.md)
+- [final_report.md](/Users/hankli/Desktop/coding/ece4010_proj/final_report.md)
+- [project_summary.md](/Users/hankli/Desktop/coding/ece4010_proj/project_summary.md)
+- [report_takeaways.md](/Users/hankli/Desktop/coding/ece4010_proj/report_takeaways.md)
+- [future_work.md](/Users/hankli/Desktop/coding/ece4010_proj/future_work.md)
+- [outputs/final_materials](C:\Users\HankL\Desktop\Coding\ece4010_proj\outputs\final_materials)
+- [outputs/final_materials/main_results_table.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/final_materials/main_results_table.md)
+- [outputs/final_materials/comparison_results_table.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/final_materials/comparison_results_table.md)
+- [outputs/final_materials/figures_manifest.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/final_materials/figures_manifest.md)
+- [outputs/final_materials/additional_analysis.md](/Users/hankli/Desktop/coding/ece4010_proj/outputs/final_materials/additional_analysis.md)
+
 ## Matching Rule
 
 The repository uses a simple reproducible rule for repeated `Animal ID`s:

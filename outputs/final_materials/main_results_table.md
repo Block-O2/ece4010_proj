@@ -1,0 +1,4 @@
+| setting | split | target | model | accuracy | f1_score | roc_auc |
+| --- | --- | --- | --- | --- | --- | --- |
+| main_baseline | stratified | fast_adoption_30d | logreg | 0.6463 | 0.5828 | 0.7313 |
+| main_baseline | stratified | fast_adoption_30d | rf | 0.7289 | 0.6406 | 0.8149 |

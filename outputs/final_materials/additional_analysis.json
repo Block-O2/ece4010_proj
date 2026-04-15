@@ -1,0 +1,63 @@
+{
+  "subgroup_descriptive_by_animal_type": [
+    {
+      "animal_type": "Cat",
+      "rows": 69324,
+      "fast_adoption_rate": 0.2783,
+      "adoption_rate": 0.5109,
+      "median_age_days": 60.0
+    },
+    {
+      "animal_type": "Dog",
+      "rows": 94608,
+      "fast_adoption_rate": 0.3668,
+      "adoption_rate": 0.4982,
+      "median_age_days": 365.0
+    }
+  ],
+  "rf_test_metrics_by_animal_type": [
+    {
+      "animal_type": "Cat",
+      "accuracy": 0.7829,
+      "f1_score": 0.6497,
+      "support": 13906,
+      "positive_rate": 0.2774,
+      "roc_auc": 0.8657
+    },
+    {
+      "animal_type": "Dog",
+      "accuracy": 0.6892,
+      "f1_score": 0.6358,
+      "support": 18881,
+      "positive_rate": 0.3677,
+      "roc_auc": 0.7712
+    }
+  ],
+  "intake_year_ablation_rf": {
+    "features_removed": [
+      "intake_year"
+    ],
+    "baseline_rf_test_metrics": {
+      "accuracy": 0.7289,
+      "f1_score": 0.6406,
+      "roc_auc": 0.8149
+    },
+    "ablation_rf_test_metrics": {
+      "accuracy": 0.7151,
+      "f1_score": 0.6283,
+      "support": 32787,
+      "positive_rate": 0.3294,
+      "roc_auc": 0.8014
+    },
+    "delta_vs_baseline": {
+      "accuracy_delta": -0.0138,
+      "f1_score_delta": -0.0123,
+      "roc_auc_delta": -0.0135
+    }
+  },
+  "rerun_notes": [
+    "The full main evaluation was not rerun.",
+    "A lightweight random-forest ablation without intake_year was rerun on the existing processed dataset.",
+    "Subgroup model performance by animal type reused the saved main random-forest model and the deterministic stratified split."
+  ]
+}
